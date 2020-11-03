@@ -1,0 +1,213 @@
+{
+ "interactionModel": {
+  "languageModel": {
+   "invocationName": "test one",
+   "modelConfiguration": {
+    "fallbackIntentSensitivity": {
+     "level": "LOW"
+    }
+   },
+   "intents": [
+    {
+     "name": "AMAZON.CancelIntent",
+     "samples": []
+    },
+    {
+     "name": "AMAZON.HelpIntent",
+     "samples": []
+    },
+    {
+     "name": "AMAZON.StopIntent",
+     "samples": []
+    },
+    {
+     "name": "AMAZON.YesIntent",
+     "samples": []
+    },
+    {
+     "name": "AMAZON.NoIntent",
+     "samples": []
+    },
+    {
+     "name": "AMAZON.RepeatIntent",
+     "samples": []
+    },
+    {
+     "name": "AMAZON.FallbackIntent",
+     "samples": []
+    },
+    {
+     "name": "searchIntent",
+     "slots": [
+      {
+       "name": "state",
+       "type": "AMAZON.US_STATE",
+       "samples": [
+        "schools in {state}",
+        "in {state}",
+        "{state}"
+       ]
+      },
+      {
+       "name": "city",
+       "type": "AMAZON.US_CITY",
+       "samples": [
+        "I am interested in {city}",
+        "{city}"
+       ]
+      },
+      {
+       "name": "schoolType",
+       "type": "schoolTypeName",
+       "samples": [
+        "I am looking for {schoolType} schools in {city} and {state}",
+        "I am looking for {schoolType} schools",
+        "{schoolType} schools",
+        "{schoolType}"
+       ]
+      }
+     ],
+     "samples": [
+      "{schoolType} schools",
+      "{schoolType}",
+      "Show me all {schoolType} schools in {city} state of {state}",
+      "{state}",
+      "I want colleges in {city} {state} ",
+      "I want college list in {state} "
+     ]
+    },
+    {
+     "name": "AMAZON.NavigateHomeIntent",
+     "samples": []
+    }
+   ],
+   "types": [
+    {
+     "name": "schoolTypeName",
+     "values": [
+      {
+       "name": {
+        "value": "all"
+       }
+      },
+      {
+       "name": {
+        "value": "private"
+       }
+      },
+      {
+       "name": {
+        "value": "private for-profit"
+       }
+      },
+      {
+       "name": {
+        "value": "Private nonprofit"
+       }
+      },
+      {
+       "name": {
+        "value": "Public"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "dialog": {
+   "intents": [
+    {
+     "name": "searchIntent",
+     "confirmationRequired": false,
+     "prompts": {},
+     "slots": [
+      {
+       "name": "state",
+       "type": "AMAZON.US_STATE",
+       "confirmationRequired": false,
+       "elicitationRequired": true,
+       "prompts": {
+        "elicitation": "Elicit.Slot.159289422035.1580625753302"
+       }
+      },
+      {
+       "name": "city",
+       "type": "AMAZON.US_CITY",
+       "confirmationRequired": false,
+       "elicitationRequired": true,
+       "prompts": {
+        "elicitation": "Elicit.Slot.441689569811.1045438172359"
+       }
+      },
+      {
+       "name": "schoolType",
+       "type": "schoolTypeName",
+       "confirmationRequired": false,
+       "elicitationRequired": true,
+       "prompts": {
+        "elicitation": "Elicit.Slot.1152289733641.597510669583"
+       }
+      }
+     ]
+    }
+   ],
+   "delegationStrategy": "ALWAYS"
+  },
+  "prompts": [
+   {
+    "id": "Confirm.Intent.1016782324976",
+    "variations": [
+     {
+      "type": "PlainText",
+      "value": "you selected{state} . Please select city"
+     }
+    ]
+   },
+   {
+    "id": "Confirm.Intent.464757977415",
+    "variations": [
+     {
+      "type": "PlainText",
+      "value": "selected {city} . Do you want to search colleges?"
+     }
+    ]
+   },
+   {
+    "id": "Elicit.Slot.464757977415.1374271139695",
+    "variations": [
+     {
+      "type": "PlainText",
+      "value": "Do you want to search colleges?"
+     }
+    ]
+   },
+   {
+    "id": "Elicit.Slot.441689569811.1045438172359",
+    "variations": [
+     {
+      "type": "PlainText",
+      "value": "In which city are looking for colleges?"
+     }
+    ]
+   },
+   {
+    "id": "Elicit.Slot.1152289733641.597510669583",
+    "variations": [
+     {
+      "type": "PlainText",
+      "value": "Which type of schools you are looking for public, private etc?"
+     }
+    ]
+   },
+   {
+    "id": "Elicit.Slot.159289422035.1580625753302",
+    "variations": [
+     {
+      "type": "PlainText",
+      "value": "Please say state"
+     }
+    ]
+   }
+  ]
+ }
+}
