@@ -1,0 +1,89 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "guru college",
+            "modelConfiguration": {
+                "fallbackIntentSensitivity": {
+                    "level": "LOW"
+                }
+            },
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.RepeatIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "city_intent",
+                    "slots": [
+                        {
+                            "name": "city_slot",
+                            "type": "AMAZON.US_CITY"
+                        }
+                    ],
+                    "samples": [
+                        "I want  {city_slot} schools",
+                        "I am interested in {city_slot}  schools",
+                        "{city_slot}",
+                        "{city_slot} school",
+                        "I am looking for schools in {city_slot}",
+                        "I want  {city_slot} "
+                    ]
+                },
+                {
+                    "name": "state_intent",
+                    "slots": [
+                        {
+                            "name": "state_slot",
+                            "type": "AMAZON.US_STATE"
+                        }
+                    ],
+                    "samples": [
+                        "I want {state_slot}",
+                        "I want {state_slot} school",
+                        "{state_slot} school",
+                        "{state_slot}",
+                        "I am looking for schools in {state_slot}",
+                        "I am interested in {state_slot} schools"
+                    ]
+                },
+                {
+                    "name": "searchIntent",
+                    "slots": [
+                        {
+                            "name": "yes",
+                            "type": ""
+                        }
+                    ],
+                    "samples": [
+                        "{yes} ",
+                        "oh {yes} ",
+                        "{yes} I don't want to search more",
+                        "{yes} I want to choose diffterent college",
+                        "{yes} I want to search again"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                }
+            ],
+            "types": []
+        }
+    }
+}
