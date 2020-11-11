@@ -1,5 +1,5 @@
-/* eslint-disable semi */
-/* eslint-disable max-len */
+
+const dynamoDB = require('./utility');
 const Alexa = require('ask-sdk-core')
 const axios = require('axios');
 
@@ -28,16 +28,90 @@ async function getCollege(city, state, schoolType) {
 }
 
 // code for the handlers
+const PERMISSIONS = ['alexa::profile:name:read', 'alexa::profile:email:read']
+const messages = {
+  WELCOME: 'welcome to Guru, virtual guide for selecting dream college. What do you want to ask?You can search colleges by state, city, school type and school name',
+  WHAT_DO_YOU_WANT: 'What do you want to ask?',
+  NOTIFY_MISSING_PERMISSIONS: 'Please enable Customer Profile permissions in the Amazon Alexa app.',
+  NAME_MISSING: 'You can set your name either in the Alexa app under calling and messaging, or you can set it at Amazon.com, under log-in and security.',
+  EMAIL_MISSING: 'You can set your email at Amazon.com, under log-in and security.',
+  NUMBER_MISSING: 'You can set your phone number at Amazon.com, under log-in and security.',
+  ERROR: 'Uh Oh. Looks like something went wrong.',
+  API_FAILURE: 'There was an error with the API. Please try again.',
+  GOODBYE: 'Bye! Thanks for using the Guru Skill!',
+  UNHANDLED: 'This skill doesn\'t support that. Please ask something else.',
+  HELP: 'You can use this skill by asking something like: Provide me colleges in state, city and type public/private',
+  STOP: 'Bye! Thanks for using the Guru Skill!',
+};
 
 const LaunchRequestHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
-  handle(handlerInput) {
+  async handle(handlerInput) {
+    // Name retrieval process
+    const consentToken = handlerInput.requestEnvelope.context.System.apiAccessToken;
+    console.log(consentToken)
+    // if (!consentToken) {
+
+    //  }
+
+    const userID = handlerInput.requestEnvelope.context.System.user.userId;
+    let name, uEmail;
+    try {
+      const client = handlerInput.serviceClientFactory.getUpsServiceClient();
+      name = await client.getProfileName();
+      console.log(name)
+      uEmail = await client.getProfileEmail();
+
+      if (!name) {
+        return handlerInput.responseBuilder
+          .speak(messages.NAME_MISSING)
+          .getResponse();
+      }
+      if (!uEmail) {
+        return handlerInput.responseBuilder
+          .speak(messages.EMAIL_MISSING)
+          .getResponse();
+      }
+      //     console.log('Name successfully retrieved, now responding to user. ' + name);
+
+
+      // return response;
+    } catch (error) {
+      if (error.statusCode === 403) {
+        return handlerInput.responseBuilder
+          .speak(messages.NOTIFY_MISSING_PERMISSIONS)
+          .withAskForPermissionsConsentCard(PERMISSIONS)
+          .getResponse();
+      }
+      if (error.name !== 'ServiceError') {
+        const e = handlerInput.responseBuilder.speak(messages.ERROR).getResponse();
+        console.log(`---Error handled: ${error.message}`)
+        // return response;
+      }
+      throw error;
+    }
+
+    // *************************************************************************
+
+    let result = await dynamoDB.getMyCollegeItem(userID);
+    let speechText = '';
+
+    //console.log(result.length)
     // welcome message
-    let speechText = 'welcome to Guru, virtual guide for selecting dream college. Please say state';
+    if (!name) {
+      speechText = messages.NAME_MISSING;
+      // response = handlerInput.responseBuilder.speak(messages.NAME_MISSING).getResponse();
+    } else {
+      speechText = name + ', ' + messages.WELCOME;
+      // response = handlerInput.responseBuilder.speak(messages.NAME_AVAILABLE + name).getResponse();
+    }
+
     // welcome screen message
-    let displayText = 'welcome to Guru, virtual guide for selecting dream college. Please say state'
+    let displayText = speechText
+
+    result = await dynamoDB.putMyCollegeItem(userID)
 
     return handlerInput.responseBuilder
       .speak(speechText)
@@ -59,8 +133,11 @@ const SearchIntentHandler = {
     let city = intent.slots.city.value;
     let state = intent.slots.state.value;
     let schoolType = intent.slots.schoolType.value;
+    const userID = handlerInput.requestEnvelope.context.System.user.userId;
 
     if (state && city && schoolType) {
+      const resultPut = await dynamoDB.putMyCollegeItem(userID, state, city, schoolType)
+
       const result = await getCollege(city, state, schoolType) //results.school.name
 
       speechText = 'I found ' + result.length.toString() + ' colleges in ' + city + ' in the state of ' + state + '. \n '
@@ -74,7 +151,7 @@ const SearchIntentHandler = {
         .withSimpleCard(appName.displayText)
         .withShouldEndSession(true)
         .getResponse();
-      //})
+      // })
     } else {
       return handlerInput.responseBuilder
         .addDelegateDirective(intent)
@@ -93,7 +170,7 @@ const HelpIntentHandler = {
   },
   handle(handlerInput) {
     // help text for your skill
-    let speechText = '';
+    let speechText = messages.HELP;
 
     return handlerInput.responseBuilder
       .speak(speechText)
@@ -132,6 +209,7 @@ const SessionEndedRequestHandler = {
 // Lambda handler function
 // Remember to add custom request handlers here
 exports.handler = Alexa.SkillBuilders.custom()
+  .withApiClient(new Alexa.DefaultApiClient())
   .addRequestHandlers(LaunchRequestHandler,
     SearchIntentHandler,
     HelpIntentHandler,
