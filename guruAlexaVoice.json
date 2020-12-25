@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "guru college",
+            "invocationName": "my guru",
             "modelConfiguration": {
                 "fallbackIntentSensitivity": {
                     "level": "LOW"
@@ -21,7 +21,7 @@
                     "samples": []
                 },
                 {
-                    "name": "AMAZON.RepeatIntent",
+                    "name": "AMAZON.NavigateHomeIntent",
                     "samples": []
                 },
                 {
@@ -29,61 +29,253 @@
                     "samples": []
                 },
                 {
-                    "name": "city_intent",
-                    "slots": [
-                        {
-                            "name": "city_slot",
-                            "type": "AMAZON.US_CITY"
-                        }
-                    ],
-                    "samples": [
-                        "I want  {city_slot} schools",
-                        "I am interested in {city_slot}  schools",
-                        "{city_slot}",
-                        "{city_slot} school",
-                        "I am looking for schools in {city_slot}",
-                        "I want  {city_slot} "
-                    ]
-                },
-                {
-                    "name": "state_intent",
-                    "slots": [
-                        {
-                            "name": "state_slot",
-                            "type": "AMAZON.US_STATE"
-                        }
-                    ],
-                    "samples": [
-                        "I want {state_slot}",
-                        "I want {state_slot} school",
-                        "{state_slot} school",
-                        "{state_slot}",
-                        "I am looking for schools in {state_slot}",
-                        "I am interested in {state_slot} schools"
-                    ]
-                },
-                {
                     "name": "searchIntent",
                     "slots": [
                         {
-                            "name": "yes",
-                            "type": ""
+                            "name": "state",
+                            "type": "AMAZON.US_STATE",
+                            "samples": [
+                                "schools in {city} in {state}",
+                                "schools in {state}",
+                                "in {state}",
+                                "{state}"
+                            ]
+                        },
+                        {
+                            "name": "city",
+                            "type": "AMAZON.US_CITY",
+                            "samples": [
+                                "I am interested in {city}",
+                                "{city}"
+                            ]
+                        },
+                        {
+                            "name": "schoolType",
+                            "type": "schoolTypeName",
+                            "samples": [
+                                "I am looking for {schoolType} schools in {city} and {state}",
+                                "I am looking for {schoolType} schools",
+                                "{schoolType} schools",
+                                "{schoolType}"
+                            ]
                         }
                     ],
                     "samples": [
-                        "{yes} ",
-                        "oh {yes} ",
-                        "{yes} I don't want to search more",
-                        "{yes} I want to choose diffterent college",
-                        "{yes} I want to search again"
+                        "schools in {city}",
+                        "schools in {state}",
+                        "I want colleges in {city} in {state}",
+                        "I want colleges in {state} {city}",
+                        "{schoolType} schools",
+                        "{schoolType}",
+                        "Show me all {schoolType} schools in {city} state of {state}",
+                        "{state}",
+                        "I want colleges in {city} {state} ",
+                        "I want college list in {state} "
                     ]
                 },
                 {
-                    "name": "AMAZON.NavigateHomeIntent",
-                    "samples": []
+                    "name": "searchTypeIntent",
+                    "slots": [
+                        {
+                            "name": "searchType",
+                            "type": "searchTypeName",
+                            "samples": [
+                                "{searchType} search",
+                                "{searchType}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "{searchType} search",
+                        "{searchType}"
+                    ]
                 }
             ],
-            "types": []
-        }
+            "types": [
+                {
+                    "name": "schoolTypeName",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "all"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "private"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "private for-profit"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Private nonprofit"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Public"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "searchTypeName",
+                    "values": [
+                        {
+                            "id": "0",
+                            "name": {
+                                "value": "new search",
+                                "synonyms": [
+                                    "much different",
+                                    "differ",
+                                    "differently",
+                                    "different",
+                                    "new search",
+                                    "new"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "1",
+                            "name": {
+                                "value": "same search",
+                                "synonyms": [
+                                    "exact",
+                                    "same as",
+                                    "identical",
+                                    "exactly",
+                                    "similar",
+                                    "same"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "searchIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "state",
+                            "type": "AMAZON.US_STATE",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.159289422035.1580625753302"
+                            }
+                        },
+                        {
+                            "name": "city",
+                            "type": "AMAZON.US_CITY",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.441689569811.1045438172359"
+                            }
+                        },
+                        {
+                            "name": "schoolType",
+                            "type": "schoolTypeName",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1152289733641.597510669583"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "searchTypeIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "searchType",
+                            "type": "searchTypeName",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1554358053875.1408347791009"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
+        },
+        "prompts": [
+            {
+                "id": "Confirm.Intent.1016782324976",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "you selected{state} . Please select city"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Intent.464757977415",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "selected {city} . Do you want to search colleges?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.464757977415.1374271139695",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Do you want to search colleges?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.441689569811.1045438172359",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "In which city are looking for colleges?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1152289733641.597510669583",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Which type of schools you are looking for public, private etc?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.159289422035.1580625753302",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Please say state"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1554358053875.1408347791009",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "You want same search or new."
+                    }
+                ]
+            }
+        ]
     }
 }

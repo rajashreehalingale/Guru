@@ -1,4 +1,3 @@
-'use strict'
 const AWS = require('aws-sdk');
 
 AWS.config.update({ region: "us-east-1" });
@@ -8,15 +7,13 @@ const documentClient = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
 const getMyCollegeItem = async (userId) => {
   let params = {
     TableName: "myCollege",
-    key: {
+    Key: {
       userId: userId
     }
   };
 
   try {
     const data = await documentClient.get(params).promise();
-
-    console.log(data)
 
     return data
   } catch (err) {
